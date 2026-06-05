@@ -22,21 +22,31 @@ class UpdateStatusSummaryDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final statusUpdate = ref.watch(updateSummaryProvider);
     final statusUpdateStream = ref.watch(updatesSocketProvider);
-    final AsyncValue<UpdateStatusDto?> finalStatus =
-        (statusUpdateStream.valueOrNull?.total.isGreaterThan(0)).ifNull()
-            ? statusUpdateStream
-            : statusUpdate;
+    final isRunning =
+        (statusUpdateStream.valueOrNull?.isUpdateChecking).ifNull();
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.updatesSummary),
         actions: const [UpdateStatusPopupMenu(showSummaryButton: false)],
       ),
-      body: finalStatus.showUiWhenData(
+      body: statusUpdate.showUiWhenData(
         context,
         (data) => RefreshIndicator(
           onRefresh: () => ref.refresh(updateSummaryProvider.future),
           child: ListView(
             children: [
+              if (isRunning)
+                ListTile(
+                  leading: const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  title: Text(
+                    "${statusUpdateStream.valueOrNull?.updateChecked.padLeft()}"
+                    "/${statusUpdateStream.valueOrNull?.total.padLeft()}",
+                  ),
+                ),
               if ((data?.runningJobs.mangaList).isNotBlank)
                 UpdateStatusExpansionTile(
                   mangas: data!.runningJobs.mangaList,

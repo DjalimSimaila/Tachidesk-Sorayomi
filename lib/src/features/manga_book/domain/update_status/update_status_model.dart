@@ -9,6 +9,7 @@ import '../manga/manga_model.dart';
 import 'graphql/__generated__/fragment.graphql.dart';
 
 typedef UpdateStatusDto = Fragment$UpdateStatusDto;
+typedef UpdaterUpdatesDto = Fragment$UpdaterUpdatesDto;
 
 extension UpdateStatusExt on UpdateStatusDto {
   int get total =>
@@ -25,6 +26,18 @@ extension UpdateStatusExt on UpdateStatusDto {
 
   bool get isUpdateChecking =>
       (total).isGreaterThan(0) && !(isUpdateCheckCompleted);
+}
+
+extension UpdaterUpdatesExt on UpdaterUpdatesDto {
+  int get total => jobsInfo.totalJobs;
+
+  int get updateChecked => jobsInfo.finishedJobs;
+
+  bool get isRunning => jobsInfo.isRunning;
+
+  bool get isUpdateCheckCompleted => total == updateChecked;
+
+  bool get isUpdateChecking => jobsInfo.isRunning;
 }
 
 extension U on Fragment$UpdateStatusJobDto {

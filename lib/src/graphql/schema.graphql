@@ -629,12 +629,14 @@ type ExtensionType {
 input FetchChapterPagesInput {
   chapterId: Int!
   clientMutationId: String
+  format: String
 }
 
 type FetchChapterPagesPayload {
   chapter: ChapterType!
   clientMutationId: String
   pages: [String!]!
+  syncConflict: SyncConflictInfoType
 }
 
 input FetchChaptersInput {
@@ -1689,7 +1691,8 @@ type Subscription {
   downloadChanged: DownloadStatus! @deprecated(reason: "Replaced width downloadStatusChanged, replace with downloadStatusChanged(input)")
   downloadStatusChanged(input: DownloadChangedInput!): DownloadUpdates!
   webUIUpdateStatusChange: WebUIUpdateStatus!
-  updateStatusChanged: UpdateStatus!
+  updateStatusChanged: UpdateStatus! @deprecated(reason: "Replaced by libraryUpdateStatusChanged")
+  libraryUpdateStatusChanged(input: LibraryUpdateStatusChangedInput!): UpdaterUpdates!
 }
 
 type SwitchPreference {
@@ -2188,3 +2191,56 @@ type WebUIUpdateStatus {
   state: UpdateState!
 }
 
+type SyncConflictInfoType {
+  deviceName: String!
+  remotePage: Int!
+}
+
+type UpdaterJobsInfoType {
+  finishedJobs: Int!
+  isRunning: Boolean!
+  skippedCategoriesCount: Int!
+  skippedMangasCount: Int!
+  totalJobs: Int!
+}
+
+enum MangaJobStatus {
+  PENDING
+  RUNNING
+  COMPLETE
+  FAILED
+  SKIPPED
+}
+
+enum CategoryJobStatus {
+  UPDATING
+  SKIPPED
+}
+
+type MangaUpdateType {
+  manga: MangaType!
+  status: MangaJobStatus!
+}
+
+type CategoryUpdateType {
+  category: CategoryType!
+  status: CategoryJobStatus!
+}
+
+type LibraryUpdateStatus {
+  categoryUpdates: [CategoryUpdateType!]!
+  jobsInfo: UpdaterJobsInfoType!
+  mangaUpdates: [MangaUpdateType!]!
+}
+
+input LibraryUpdateStatusChangedInput {
+  maxUpdates: Int
+}
+
+type UpdaterUpdates {
+  categoryUpdates: [CategoryUpdateType!]!
+  initial: LibraryUpdateStatus
+  jobsInfo: UpdaterJobsInfoType!
+  mangaUpdates: [MangaUpdateType!]!
+  omittedUpdates: Boolean!
+}

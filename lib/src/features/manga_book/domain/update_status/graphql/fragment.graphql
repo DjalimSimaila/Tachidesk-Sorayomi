@@ -36,3 +36,11 @@ fragment UpdateStatusDto on UpdateStatus {
     }
   }
 }
+
+fragment UpdaterUpdatesDto on UpdaterUpdates {
+  jobsInfo {
+    isRunning
+    totalJobs
+    finishedJobs
+  }
+}

@@ -42,9 +42,9 @@ query UpdateStatusDto {
   }
 }
 
-subscription UpdateStatusChange {
-  updateStatusChanged {
-    ...UpdateStatusDto
+subscription UpdateStatusChange($input: LibraryUpdateStatusChangedInput!) {
+  libraryUpdateStatusChanged(input: $input) {
+    ...UpdaterUpdatesDto
   }
 }
 

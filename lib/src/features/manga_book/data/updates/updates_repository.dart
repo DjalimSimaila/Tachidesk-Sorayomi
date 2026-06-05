@@ -86,9 +86,16 @@ class UpdatesRepository {
       .query$UpdateStatusDto(Options$Query$UpdateStatusDto())
       .getData((data) => data.updateStatus);
 
-  Stream<UpdateStatusDto?> updateStatusSubscription() => subscriptionClient
-      .subscribe$UpdateStatusChange(Options$Subscription$UpdateStatusChange())
-      .getData((data) => data.updateStatusChanged);
+  Stream<UpdaterUpdatesDto?> updateStatusSubscription() =>
+      subscriptionClient
+          .subscribe$UpdateStatusChange(
+            Options$Subscription$UpdateStatusChange(
+              variables: Variables$Subscription$UpdateStatusChange(
+                input: Input$LibraryUpdateStatusChangedInput(),
+              ),
+            ),
+          )
+          .getData((data) => data.libraryUpdateStatusChanged);
 }
 
 @riverpod
@@ -101,5 +108,5 @@ Future<UpdateStatusDto?> updateSummary(Ref ref) =>
     ref.watch(updatesRepositoryProvider).summaryUpdates();
 
 @riverpod
-Stream<UpdateStatusDto?> updatesSocket(Ref ref) =>
+Stream<UpdaterUpdatesDto?> updatesSocket(Ref ref) =>
     ref.watch(updatesRepositoryProvider).updateStatusSubscription();
