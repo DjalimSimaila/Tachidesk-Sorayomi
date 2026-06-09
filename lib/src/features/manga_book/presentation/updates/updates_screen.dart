@@ -16,6 +16,7 @@ import '../../../../widgets/emoticons.dart';
 import '../../data/updates/updates_repository.dart';
 import '../../domain/chapter/chapter_model.dart';
 import '../../domain/chapter/graphql/__generated__/fragment.graphql.dart';
+import '../../domain/update_status/update_status_model.dart';
 import '../../widgets/chapter_actions/multi_chapters_actions_bottom_app_bar.dart';
 import '../../widgets/update_status_fab.dart';
 import '../../widgets/update_status_popup_menu.dart';
